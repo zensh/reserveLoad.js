@@ -1,7 +1,7 @@
 reserveLoad.js
 ===========
 
-**Load Javascript with reserve URL by asynchronous or synchronism**
+**Asyncronous JavaScript loader and dependency manager, and load JavaScript with reserve URL.**
 
 reserveLoad.js 能从多个备用网址异步加载JS文件。比如使用Google CDN资源时，有时可能因为网络问题Google CDN不可用，就自动从备用的Sina CDN加载，如果仍然连接失败，就从服务器自身加载...
 
@@ -37,19 +37,19 @@ reserveLoad.min.js的体积是如此之小（1.12 KB），可以直接嵌入到h
 
 synchronism, load by order
 
-    reserveLoad(['foo1.js'], ['foo2.js'], ['foo3.js'], ['foo4.js'], ...);
+    reserveLoad(['foo1.js', null], ['foo2.js', null], ['foo3.js', null], ['foo4.js', null], ...);
 
 asynchronous, no order
 
-    reserveLoad.async(['foo1.js'], ['foo2.js'], ['foo3.js'], ['foo4.js'], ...);
+    reserveLoad.async(['foo1.js', null], ['foo2.js', null], ['foo3.js', null], ['foo4.js', null], ...);
 
 synchronism, load by order, run allLoadedCallBack after all js loaded.
 
-    reserveLoad(['foo1.js'], ['foo2.js'], ['foo3.js'], ...,  function allLoadedCallBack() {});
+    reserveLoad(['foo1.js', null], ['foo2.js', null], ['foo3.js', null], ...,  function allLoadedCallBack() {});
 
 asynchronous, no order, run allLoadedCallBack after all js loaded.
 
-    reserveLoad.async(['foo1.js'], ['foo2.js'], ['foo3.js'], ..., allLoadedCallBack);
+    reserveLoad.async(['foo1.js', null], ['foo2.js', null], ['foo3.js', null], ..., allLoadedCallBack);
 
 synchronism, load by order, with some reserve url, run allLoadedCallBack after all js loaded.when load with reserve url, a method in js must be declared to detect js is loaded or false, such as 'methodInFoo1'
 
@@ -61,7 +61,8 @@ synchronism, load by order, with some reserve url, run allLoadedCallBack after a
 asynchronous, no order, with some reserve url, run allLoadedCallBack after all js loaded.'jquery' use to detect whether 'jquery.js' load success or false, 'angular'  is also.
 
     reserveLoad.async(
-        ['url1/jquery.js', 'url2/jquery.js', 'url3/jquery.js',..., 'jquery'],
+        ['url1/jquery.js', 'url2/jquery.js', 'url3/jquery.js',..., 'jQuery'],
+        ['url1/jquery-ui.js', 'url2/jquery-ui.js', 'url3/jquery-ui.js',..., 'jQuery.ui'],
         ['url1/angular.js', 'url2/angular.js', 'url3/angular.js',..., 'angular'],
         ..., allLoadedCallBack);
 
