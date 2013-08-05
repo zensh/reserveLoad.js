@@ -1,7 +1,7 @@
 reserveLoad.js
 ===========
 
-**Asyncronous JavaScript loader and dependency manager, and load JavaScript with reserve URL.**
+**Asyncronous JavaScript/CSS loader and dependency manager, and load JavaScript with reserve URL.**
 
 reserveLoad.js 能从多个备用网址异步加载JS文件。比如使用Google CDN资源时，有时可能因为网络问题Google CDN不可用，就自动从备用的Sina CDN加载，如果仍然连接失败，就从服务器自身加载...
 
@@ -9,7 +9,19 @@ reserveLoad.js 能从多个备用网址异步加载JS文件。比如使用Google
 
 还可设定同时异步加载或者按照顺序逐步加载。
 
-### Examples ###
+### Browser Support
+---------------
+  * IE 6+
+  * Opera 10+
+  * Safari 3+
+  * Chrome 9+
+  * Firefox 2+
+
+### Who Used
+
+ + AngularJS中文社区：[http://angularjs.cn/]()
+
+### Examples
 
     <html>
         <head>
@@ -22,36 +34,32 @@ reserveLoad.js 能从多个备用网址异步加载JS文件。比如使用Google
                 ['mainUrl/jquery.js', 'reserveUrl1/jquery.js', 'reserveUrl2/jquery.js', 'jQuery'],
                 ['mainUrl/angular.js', 'reserveUrl1/angular.js', 'reserveUrl2/angular.js', 'angular'],
                 function () {
-                    alert('synchronism loaded!');
+                    alert('synchronous loaded!');
                 });
             </script>
         </body>
     </html>
 
-Demo请参考test目录下的index.html。
 
-reserveLoad.min.js的体积是如此之小（1.12 KB），可以直接嵌入到html中。
+### Exhaustive list of ways to use reserveLoad.js
 
+synchronous, load by order
 
-### Exhaustive list of ways to use reserveLoad.js ###
-
-synchronism, load by order
-
-    reserveLoad(['foo1.js', null], ['foo2.js', null], ['foo3.js', null], ['foo4.js', null], ...);
+    reserveLoad('foo1.js', 'foo2.js', 'foo3.js', 'foo4.js', ...);
 
 asynchronous, no order
 
-    reserveLoad.async(['foo1.js', null], ['foo2.js', null], ['foo3.js', null], ['foo4.js', null], ...);
+    reserveLoad.async('foo1.js', 'foo2.js', 'foo3.js', 'foo4.js', ...);
 
-synchronism, load by order, run allLoadedCallBack after all js loaded.
+synchronous, load by order, run allLoadedCallBack after all js loaded.
 
-    reserveLoad(['foo1.js', null], ['foo2.js', null], ['foo3.js', null], ...,  function allLoadedCallBack() {});
+    reserveLoad('foo1.js', 'foo2.js', 'foo3.js', 'foo4.js' ...,  function allLoadedCallBack() {});
 
 asynchronous, no order, run allLoadedCallBack after all js loaded.
 
-    reserveLoad.async(['foo1.js', null], ['foo2.js', null], ['foo3.js', null], ..., allLoadedCallBack);
+    reserveLoad.async('foo1.js', 'foo2.js', 'foo3.js', 'foo4.js' ..., allLoadedCallBack);
 
-synchronism, load by order, with some reserve url, run allLoadedCallBack after all js loaded.when load with reserve url, a method in js must be declared to detect js is loaded or false, such as 'methodInFoo1'
+synchronous, load by order, with some reserve url, run allLoadedCallBack after all js loaded.when load with reserve url, a method in js must be declared to detect js is loaded or false, such as 'methodInFoo1'
 
     reserveLoad(
         ['url1/foo1.js', 'url2/foo1.js', 'url3/foo1.js',..., 'methodInFoo1'],

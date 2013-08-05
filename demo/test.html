@@ -11,7 +11,7 @@
         </script>
     </head>
     <body>
-        <h1>reserveLoad.js</h1>
+        <h1 class="text-error">reserveLoad.js</h1>
         <script>
         var jqVersion = !-[1,] ? '1.7.2' : '2.0.3';
         reserveLoad(
@@ -19,6 +19,7 @@
             ['http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.none.js', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js', '$.ui'],
             ['http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.none.js', 'http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js', 'angular'],
             ['http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js', 'http://netdna.bootstrapcdn.com/twitter-bootstrap/3.0.0-rc1/js/bootstrap.min.js', '$.fn.dropdown'],
+            ['test.js', 'foo'],
             function (url) {
                 alert(url ? 'Error: ' + url : 'All loaded!')
             });

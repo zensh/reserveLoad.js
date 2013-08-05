@@ -1,23 +1,20 @@
 'use strict';
 
 /*!
- * reserveLoad.js, version 0.2.0, 2013/08/01
+ * reserveLoad.js, version 0.3.0, 2013/08/05
  * Asyncronous JavaScript/CSS loader and dependency manager, and load JavaScript with reserve URL.
  * https://github.com/zensh/reserveLoad.js
  * (c) admin@zensh.com 2013
  * License: MIT
  */
 
-(function (global, undefined) {
+(function (global) {
 
     var doc = global.document,
         location = doc.location,
         head = doc.getElementsByTagName('head')[0] || doc.documentElemen,
         baseElement = head.getElementsByTagName('base')[0],
-        baseURL = baseElement ? baseElement.href : location.protocol + '//' + location.host,
-        events = ['onerror', 'onload', 'onreadystatechange'],
         slice = Array.prototype.slice,
-        validBase = /^https?:\/\//,
         validCSS = /\.css(?:\?|$)/i,
         validState = /^(?:loaded|complete|undefined)$/;
 
@@ -26,8 +23,8 @@
     };
     reserveLoad.async = function () {
         startLoad(slice.call(arguments), true);
-    }
-    reserveLoad.version = '0.2.0';
+    };
+    reserveLoad.version = '0.3.0';
 
     function isArray(obj) {
         return Array.isArray ? Array.isArray(obj) : Object.prototype.toString.call(obj) === '[object Array]';
@@ -60,7 +57,7 @@
             var key = array[0],
                 value = context[key],
                 type = typeof value;
-            return array.length > 1 && type && (type === 'object' || type === 'function') ? _parse(value, array.slice(1)) : value;
+            return array.length > 1 && (type === 'object' || type === 'function') ? _parse(value, array.slice(1)) : value;
         }
     }
 
@@ -69,35 +66,27 @@
             node = doc.createElement(isCSS ? 'link' : 'script'),
             success = isCSS || !fn;
 
-        each(events, function (x) {
-            node[x] = onEvent;
-        });
+        node.onload = node.onerror = node.onreadystatechange = function () {
+            if (validState.test(node.readyState + '')) {
+                success = success || !! parse(global, fn);
+                if (!success) {
+                    head.removeChild(node);
+                } else {
+                    node.onload = node.onreadystatechange = null;
+                }
+                callback(success);
+            }
+        };
         if (isCSS) {
-            node.rel = 'stylesheet'
-            node.href = url
+            node.rel = 'stylesheet';
+            node.href = url;
         } else if (url) {
-            node.async = true;
+            node.async = 1;
             node.src = url;
         } else {
             return;
         }
         head.insertBefore(node, head.firstChild);
-
-        function onEvent() {
-            if (validState.test(node.readyState + '')) {
-                success = success || !!parse(global, fn);
-                console.log(url, success, node.readyState);
-                if (!success) {
-                    head.removeChild(node);
-                } else {
-                    each(events, function (x) {
-                        node[x] = null;
-                    });
-                    node = null;
-                }
-                callback(success);
-            }
-        }
     }
 
     function startLoad(list, async) {
@@ -123,21 +112,29 @@
         }
 
         function load(array, nextLoad) {
-            if (typeof array === 'object' && array.length) {
+            if (isArray(array)) {
                 var len = array.length - 1,
-                    fnName = array[len];
-                array.length = len;
+                    fnName = len > 0 ? array[len] : null;
+                array.length = fnName === null ? len + 1 : len;
                 eachAsync(array, function (next, x) {
-                    x = validBase.test(x) ? x : (x ? baseURL + x : '');
-                    request(x, fnName, function (success) {
-                        count += +success;
-                        if (!success && next) {
-                            next();
-                        } else {
-                            checkLoaded(nextLoad, success ? null : x);
-                        }
-                    });
-                })
+                    get(x, fnName, next);
+                });
+            } else if (array && typeof array === 'string') {
+                get(array, null);
+            } else {
+                count += 1;
+                checkLoaded(nextLoad, null);
+            }
+
+            function get(url, fnName, next) {
+                request(url, fnName, function (success) {
+                    count += +success;
+                    if (!success && next) {
+                        next();
+                    } else {
+                        checkLoaded(nextLoad, success ? null : url);
+                    }
+                });
             }
         }
     }
