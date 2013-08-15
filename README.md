@@ -11,7 +11,7 @@ reserveLoad.js 能从多个备用网址异步加载JS文件。比如使用Google
 
 ### Browser Support
 ---------------
-  * IE 6+
+  * IE 7+
   * Opera 10+
   * Safari 3+
   * Chrome 9+

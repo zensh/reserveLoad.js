@@ -1,7 +1,7 @@
 'use strict';
 
 /*!
- * reserveLoad.js, version 0.3.0, 2013/08/05
+ * reserveLoad.js, version 0.3.1, 2013/08/15
  * Asyncronous JavaScript/CSS loader and dependency manager, and load JavaScript with reserve URL.
  * https://github.com/zensh/reserveLoad.js
  * (c) admin@zensh.com 2013
@@ -24,29 +24,26 @@
     reserveLoad.async = function () {
         startLoad(slice.call(arguments), true);
     };
-    reserveLoad.version = '0.3.0';
+    reserveLoad.version = '0.3.1';
 
     function isArray(obj) {
         return Array.isArray ? Array.isArray(obj) : Object.prototype.toString.call(obj) === '[object Array]';
     }
 
-    function each(list, iterator, context) {
-        for (var i = 0, l = list.length; i < l; i++) {
-            iterator.call(context, list[i], i, list);
+    function each(array, iterator, context) {
+        for (var i = 0, l = array.length; i < l; i++) {
+            iterator.call(context, array[i], i, array);
         }
     }
 
-    function eachAsync(list, iterator, context) {
-        var keys = [];
-        each(list, function (x, i) {
-            keys.push(i);
-        });
-        keys.reverse();
+    function eachThen(array, iterator, context) {
+        var i = -1,
+            end = array.length - 1;
         next();
 
         function next() {
-            var key = keys.pop();
-            iterator.call(context, keys.length === 0 ? null : next, list[key], key, list);
+            i += 1;
+            iterator.call(context, i < end ? next : null, array[i], i, array);
         }
     }
 
@@ -98,7 +95,7 @@
         if (async) {
             each(list, load);
         } else {
-            eachAsync(list, function (next, x) {
+            eachThen(list, function (next, x) {
                 load(x, next);
             });
         }
@@ -116,7 +113,7 @@
                 var len = array.length - 1,
                     fnName = len > 0 ? array[len] : null;
                 array.length = fnName === null ? len + 1 : len;
-                eachAsync(array, function (next, x) {
+                eachThen(array, function (next, x) {
                     get(x, fnName, next);
                 });
             } else if (array && typeof array === 'string') {
