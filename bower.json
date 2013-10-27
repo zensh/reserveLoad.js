@@ -1,0 +1,23 @@
+{
+  "name": "reserveLoadjs",
+  "main": "reserveLoad.js",
+  "version": "0.4.0",
+  "homepage": "https://github.com/zensh/reserveLoad.js",
+  "authors": [
+    "Yan Qing <admin@zensh.com>"
+  ],
+  "description": "Dynamic JavaScript/CSS loader, and load JavaScript with reserve URL.",
+  "keywords": [
+    "dynamic",
+    "loader",
+    "reserveLoad"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

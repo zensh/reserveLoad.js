@@ -1,28 +1,29 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>reserveLoad.js</title>
-        <script src="../reserveLoad.js"></script>
-        <script>
-        // load bootstrap css v2.3.2 while lt IE 9
-        reserveLoad(['http://netdna.bootstrapcdn.com/bootstrap/' + (!-[1,] ? '2.3.2' : '3.0.0-rc1') + '/css/bootstrap.min.css', null]);
-        </script>
-    </head>
-    <body>
-        <h1 class="text-error">reserveLoad.js</h1>
-        <script>
-        var jqVersion = !-[1,] ? '1.7.2' : '2.0.3';
-        reserveLoad(
-            ['http://ajax.googleapis.com/ajax/libs/jquery/' + jqVersion + '/jquery.none.js', 'http://ajax.googleapis.com/ajax/libs/jquery/' + jqVersion + '/jquery.min.js', 'jQuery'],
-            ['http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.none.js', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js', '$.ui'],
-            ['http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.none.js', 'http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js', 'angular'],
-            ['http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js', 'http://netdna.bootstrapcdn.com/twitter-bootstrap/3.0.0-rc1/js/bootstrap.min.js', '$.fn.dropdown'],
-            ['test.js', 'foo'],
-            function (url) {
-                alert(url ? 'Error: ' + url : 'All loaded!')
-            });
-        </script>
-    </body>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>reserveLoad.js</title>
+    <script src="../reserveLoad.js"></script>
+    <script>
+      // load bootstrap css v2.3.2 while lt IE 9
+      reserveLoad(['http://netdna.bootstrapcdn.com/bootstrap/' + (!-[1,] ? '2.3.2' : '3.0.0-rc1') + '/css/bootstrap.min.css', null]);
+    </script>
+  </head>
+  <body>
+    <h1 class="text-error">reserveLoad.js</h1>
+    <script>
+      var jqVersion = !-[1,] ? '1.7.2' : '2.0.3';
+      reserveLoad(
+        ['http://ajax.googleapis.com/ajax/libs/jquery/' + jqVersion + '/jquery.none.js', 'http://ajax.googleapis.com/ajax/libs/jquery/' + jqVersion + '/jquery.min.js', 'jQuery'],
+        ['http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.none.js', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js', '$.ui'],
+        ['http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.none.js', 'http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js', 'angular'],
+        ['http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js', 'http://netdna.bootstrapcdn.com/twitter-bootstrap/3.0.0-rc1/js/bootstrap.min.js', '$.fn.dropdown'],
+        ['test.js', 'foo'],
+        function (errUrl, jq, ui, ng, dd, foo) {
+          alert(errUrl ? 'Error: ' + errUrl : 'All loaded!')
+          console.log(errUrl, jq, ui, ng, dd, foo);
+        });
+    </script>
+  </body>
 </html>
