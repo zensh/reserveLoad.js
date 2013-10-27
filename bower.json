@@ -1,7 +1,7 @@
 {
   "name": "reserveLoadjs",
   "main": "reserveLoad.js",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "homepage": "https://github.com/zensh/reserveLoad.js",
   "authors": [
     "Yan Qing <admin@zensh.com>"

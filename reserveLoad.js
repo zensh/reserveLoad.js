@@ -1,7 +1,7 @@
 'use strict';
 
 /*!
- * reserveLoad.js, version 0.4.0, 2013/10/27
+ * reserveLoad.js, version 0.4.1, 2013/10/27
  * Dynamic JavaScript/CSS loader, and load JavaScript with reserve URL.
  * https://github.com/zensh/reserveLoad.js
  * (c) admin@zensh.com 2013
@@ -18,21 +18,28 @@
     validCSS = /\.css(?:\?|$)/i,
     validState = /^(?:loaded|complete|undefined)$/,
     currentlyAddingScript = null,
-    scripts = {};
+    scripts = {}; // 缓存已加载脚本
 
+  // 入口函数
   var reserveLoad = global.reserveLoad = function () {
     startLoad(slice.call(arguments));
   };
   reserveLoad.version = 'v0.4.0';
-  global.define = function (name, deps, callback) {
-    var fn = isFunction(callback) ? callback : isFunction(deps) ? deps : isFunction(name) ? name : noop;
+
+  // 获取原始define函数，从而支持reserveLoad覆盖
+  _define = isFunction(_define) ? (_define._originalDefine ? _define._originalDefine : _define) : null;
+  // 封装define，从而兼容requirejs的define等
+  var define = global.define = function (name, deps, callback) {
+    callback = isFunction(callback) ? callback : isFunction(deps) ? deps : isFunction(name) ? name : noop;
     if (currentlyAddingScript) {
-      scripts[currentlyAddingScript] = fn();
+      scripts[currentlyAddingScript] = callback();
       currentlyAddingScript = null;
-    } else if (isFunction(_define)) {
+    } else if (_define) {
       _define(name, deps, callback);
     }
   };
+  // 保存原始define
+  define._originalDefine = _define;
 
   function noop() {}
 
@@ -47,6 +54,7 @@
       iterator.call(context, array[i], i, array);
     }
   }
+  // 逐步执行函数
   function eachThen(array, iterator, context) {
     var i = -1,
       end = array.length - 1;
@@ -56,6 +64,7 @@
     }
     return next();
   }
+  // 获取当前url地址对应的JS
   function getScript(context, exports, url) {
     var value = null;
     if (url) {
@@ -76,6 +85,7 @@
     }
     return value;
   }
+  // 加载JS或CSS
   function request(url, exports, callback) {
     var isCSS = validCSS.test(url),
       node = doc.createElement(isCSS ? 'link' : 'script'),
@@ -103,13 +113,13 @@
     currentlyAddingScript = url;
     head[baseElement ? 'insertBefore' : 'appendChild'](node, baseElement);
   }
-
+  // 主函数
   function startLoad(list) {
     var count = 0,
       total = list.length,
-      scriptList = [],
+      scriptList = [], // 当前加载器脚本清单
       callback = list[total - 1];
-
+    // 检测是否完成加载
     function checkLoaded(next, url) {
       if (url || count === total) {
         each(scriptList, function (key, index) {
